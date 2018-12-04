@@ -5,7 +5,7 @@ A minimal arduino library to control the dynamixel XM series servomotors.
 <br/> This motors use the [RS485 serial communication standard](https://en.wikipedia.org/wiki/RS-485) to communicate, thus we need to generate compatible packet and signal. This required an external hardware in order to convert the TTl signal from the arduino to RS485 of the motor. The chip is the MAX485 and can be found for a very affordable price on [ebay or so](https://www.amazon.co.jp/dp/B014MBRC9Y/ref=asc_df_B014MBRC9Y2543006/?tag=jpgo-22&creative=9315&creativeASIN=B014MBRC9Y&linkCode=df0&hvadid=280311208557&hvpos=1o1&hvnetw=g&hvrand=6514494582976950370&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=1028824&hvtargid=pla-555087944344).
 The following image showes the wiring:
 <p align="center">
-  <img src="/images/MAX485Wiring.PNG" width="300">
+  <img src="/images/MAX485Wiring.png" width="500">
 </p>
 <br/> The library generate the packet and then send them though the SoftwareSerial so we are still able to communicate and getting feed back from the arduino.</br>
 

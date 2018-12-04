@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map XM430
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+XM430	KEYWORD1	XM430
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+BeginRS485	    KEYWORD2
+LedWrite	    KEYWORD2
+TorqueEnable	KEYWORD2
+Goto        	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+ON      LITERAL1
+OFF     LITERAL1

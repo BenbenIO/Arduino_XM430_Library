@@ -9,7 +9,7 @@
 #include <SoftwareSerial.h>
 
 //Software Serial (RX, TX)
-SoftwareSerial toRS485(10, 11);
+SoftwareSerial toRS485(11, 10);
 
 //motorID
 byte servo3 = 0x03;
@@ -18,9 +18,11 @@ byte servo1 = 0x01;
 XM430 gimbal(&toRS485);
 
 void setup() {
-  //Start the Serial communication
+  //Start the Serial communication: One for the Nano communication, and the other for the RS485
   Serial.begin(9600);
   gimbal.BeginRS485(57600);
+  //Enable Torque, without this function the motors will not move.
+  gimbal.TorqueEnable(servo3, ON);
 }
 
 void loop() {
@@ -29,7 +31,7 @@ void loop() {
   gimbal.Goto(servo3, 1000);
   delay(1000);
   
-  Serial.println("Led off");
+  //Serial.println("Led off");
   gimbal.LedWrite(servo3, OFF);
   gimbal.Goto(servo3, 0);
   delay(1000);

@@ -1,6 +1,35 @@
 #include "arduino.h"
 #include "XM430.h"
 
+int XM430::ReadError(void)
+{
+  int TimeCounter = 0;
+  unsigned char IncomingByte;
+  int ErrorByte=-1;
+  digitalWrite(RS485_EN,LOW);
+
+  while((toRS485->available() < 5) & (TimeCounter < 10))
+  {
+    TimeCounter++;
+    delay(1000);
+    Serial.println("waiting data...");
+  }
+
+  while (toRS485->available() > 0)
+  {
+    IncomingByte = toRS485->read();
+    if ((IncomingByte == 255) & toRS485->peek() == 255 )
+      {
+        toRS485->read();
+        toRS485->read();
+        toRS485->read();
+        ErrorByte = toRS485->read();
+        return (ErrorByte);
+     }
+  }
+  return (-1);
+}
+
 XM430::XM430(SoftwareSerial * ss)
 {
   toRS485 = ss;
@@ -60,6 +89,9 @@ void XM430::TorqueEnable(byte servoID, byte newValue)
   toRS485->write(notchecksum);
   delay(15);
   digitalWrite(RS485_EN,LOW);
+  //readerror:
+  //Serial.print("ReadError:");
+  //Serial.println(ReadError());
 }
 
 void XM430::int32Splitting(uint32_t Position, unsigned char bytes[4])
@@ -98,7 +130,48 @@ void XM430::Goto(byte servoID, int position)
   delay(15);
   digitalWrite(RS485_EN,LOW);
 
-  _currentPosition=position;
+}
+
+void XM430::SyncWrite(byte servoID1, int position1, byte servoID2, int position2)
+{
+  //Write the goal position of two motors in only one packet
+  unsigned char instruction = 0x83; //sync write
+  byte goalPositionAddress = 0x74;
+  unsigned char length = 0x04;   // of data to write
+  unsigned char LENGTH = 0xE;  //the full packet
+  unsigned char position1bytes[4];
+  unsigned char position2bytes[4];
+  int32Splitting(position1, position1bytes);
+  int32Splitting(position2, position2bytes);
+  int checksum_ACK;
+  byte notchecksum;
+  checksum_ACK =  BROADCAST_ID + LENGTH + instruction + goalPositionAddress + length + servoID1 + position1bytes[3] + position1bytes[2] + position1bytes[1] + position1bytes[0] + servoID2  + position2bytes[3] + position2bytes[2] + position2bytes[1] + position2bytes[0];
+  notchecksum = (~checksum_ACK);
+
+  digitalWrite(RS485_EN,HIGH);
+  delay(15);
+  toRS485->write(0xFF);
+  toRS485->write(0xFF);
+  toRS485->write(0xFE);
+  toRS485->write(LENGTH);
+  toRS485->write(instruction);
+  toRS485->write(goalPositionAddress);
+  toRS485->write(length);
+  toRS485->write(servoID1);
+  toRS485->write(position1bytes[3]);
+  toRS485->write(position1bytes[2]);
+  toRS485->write(position1bytes[1]);
+  toRS485->write(position1bytes[0]);
+  toRS485->write(servoID2);
+  toRS485->write(position2bytes[3]);
+  toRS485->write(position2bytes[2]);
+  toRS485->write(position2bytes[1]);
+  toRS485->write(position2bytes[0]);
+  toRS485->write(notchecksum);
+  delay(15);
+  digitalWrite(RS485_EN,LOW);
+  Serial.println("Send packet ?");
+
 }
 
 void XM430::SetP(byte servoID, uint16_t P)

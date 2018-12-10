@@ -9,9 +9,12 @@ The following image showes the wiring:
 </p>
 <br/> The library generate the packet and then send them though the SoftwareSerial so we are still able to communicate and getting feed back from the arduino. You can also normaly connect other motor on the second port.</br>
 
-## Ongoing developpment:
+### Last update:
+* Add synWriteFunction.
+
+### Ongoing developpment:
+* Read statuspacket / read instruction : currently encounting issue, the serial does not read any status packet...
 * PID setting
-* PID reading value
 <br/>__If you want to add any function, please feel free to ask or help :)__
 
 # Code example
@@ -66,3 +69,7 @@ void loop() {
 
 * __void Goto(byte servoID, int position)__
  <br/>Goto: write the 4 byte position at the goalposition address (116->0x74). The protocol use MSB first.
+
+* __void SyncWrite(byte servoID1, int position1, byte servoID2, int position2);__
+<br/>SyncWrite: use the broadcast ID and the syncwrite instruction to write goalposition of 2 motors in only one packet. Use to reduce communication time.
+<br/>Input: motorID and the wanted position.

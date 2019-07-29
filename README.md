@@ -7,12 +7,12 @@ The following image showes the wiring:
 <p align="center">
   <img src="/images/max485Wiring.png" width="500">
 </p>
-<br/> The library generate the packet and then send them though the SoftwareSerial so we are still able to communicate and getting feed back from the arduino. You can also normaly connect other motor on the second port.</br>
+<br/> The library generate the packet and then send them though the SoftwareSerial so we are still able to communicate and getting feed back from the arduino. You can also normally connect other motor on the second port.</br>
 
 ### Last update:
 * Add synWriteFunction.
 
-### Ongoing developpment:
+### Ongoing development:
 * Read statuspacket / read instruction : currently encounting issue, the serial does not read any status packet...
 * PID setting
 <br/>__If you want to add any function, please feel free to ask or help :)__
